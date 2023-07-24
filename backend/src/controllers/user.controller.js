@@ -2,7 +2,7 @@ const { User } = require('../models/user')
 const { sign } = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { verify } = require('jsonwebtoken')
-
+const { updateUserService } = require('../services/user.services')
 
 class UserController {
     async createOneUser(request, response) {
@@ -63,17 +63,7 @@ class UserController {
                 }
             }
 
-            await User.update(
-                {
-                    name: name,
-                    email: email,
-                },
-                {
-                    where: {
-                        id: id,
-                    },
-                }
-            );
+            await updateUserService({email, name})
 
             return response.status(200).send({ message: "User updated." })
         } catch (error) {
@@ -216,6 +206,5 @@ class UserController {
         }
     }
 }
-
 
 module.exports = new UserController()
