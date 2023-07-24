@@ -8,10 +8,17 @@
     "start": "node src/index.js",
     "start-dev": "nodemon src/index.js"
   },
-  "keywords": ["NODE", "REACT", "JAVASCRIPT", "API", "CRUD"],
+  "keywords": [
+    "NODE",
+    "REACT",
+    "JAVASCRIPT",
+    "API",
+    "CRUD"
+  ],
   "author": "Rawan Hawangledt Silva de Campos",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

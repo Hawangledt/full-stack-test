@@ -27,6 +27,10 @@ const User = connection.define("user", {
     underscored: true, paranoid: true, hooks: {
         beforeCreate: (user) => {
             user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8))
+        },
+        beforeUpdate: (user) => {
+            console.log(user)
+            user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8))
         }
     }
 })
