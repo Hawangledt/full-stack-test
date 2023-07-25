@@ -1,0 +1,66 @@
+  .card {
+    width: 200px;
+    height: 300px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 30px black;
+    margin: 50px;
+    background: #0c2b5e;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #0c2b5e, #173c77);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #0c2b5e, #173c77);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+
+  .card img {
+    width: 60px;
+    height: 130px;
+    margin: 8px 0 0 0;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: fill;
+    object-position: center;
+    background-color: #716e6e;
+  }
+
+  .cardTop {
+    height: 52%;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .cardBottom {
+
+    min-height: 40%;
+    overflow: auto;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 0 10px 5px;
+    overflow-wrap: break-word;
+  }
+
+  .listOfCards {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  body {
+    font-size: 92%;
+    font-family: 'Quicksand', sans-serif;
+    color: white;
+    background: #1A2980;
+    background: -webkit-linear-gradient(to right, #26D0CE, #1A2980);
+    background: linear-gradient(to right, #26D0CE, #1A2980);
+  }
+
+  .card h2,
+  h3,
+  h4,
+  h5 {
+    margin: 0 0 3px;
+  }
+
+  .card p {
+    font-size: 75%;
+  }
