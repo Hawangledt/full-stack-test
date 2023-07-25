@@ -5,7 +5,6 @@ class BeerController {
         try {
             const { offset, limit } = request.params
             const beers = await api.get(`/beers?page=${offset}&per_page=${limit}`)
-            console.log(beers)
 
             return response.status(200).send({ beers: beers.data })
         } catch (error) {

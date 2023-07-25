@@ -1,7 +1,6 @@
 const { connection } = require('../database/connection')
 const { STRING } = require('sequelize')
-const bcrypt = require('bcrypt')
-
+const { encryptPassword } = require('../utils/functions')
 
 const User = connection.define("user", {
     name: STRING,
@@ -25,13 +24,8 @@ const User = connection.define("user", {
     }
 }, {
     underscored: true, paranoid: true, hooks: {
-        beforeCreate: (user) => {
-            user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8))
-        },
-        beforeUpdate: (user) => {
-            console.log(user)
-            user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8))
-        }
+        beforeCreate: encryptPassword,
+        beforeUpdate: encryptPassword
     }
 })
 

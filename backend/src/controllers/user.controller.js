@@ -1,7 +1,6 @@
 const { User } = require('../models/user')
 const { sign } = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-const { verify } = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const { updateUserService } = require('../services/user.services')
 
 class UserController {
@@ -31,13 +30,14 @@ class UserController {
 
     async listOneUser(request, response) {
         try {
-            const { id } = request.params
-            const user = await User.findOne({ where: { id } })
+            const { id } = request.payload
+
+            const user = await User.findByPk(id)
             if (!user) return response.status(404).send({
-                msg: 'User not found.'
+                message: 'User not found.'
             })
 
-            return response.status(200).send({ name: user.name, email: user.email })
+            return response.status(200).send({ id: user.id, name: user.name, email: user.email })
         } catch (error) {
             return response.status(401).send(
                 {
@@ -47,9 +47,37 @@ class UserController {
         }
     }
 
+    async listUser(request, response) {
+        try {
+            const users = await User.findAll({
+                attributes: ['id', 'email', 'name', 'deletedAt'],
+                paranoid: false,
+                order: [
+                    ["id", "ASC"]
+                ]
+            })
+
+            if (!users) return response.status(404).send({
+                message: 'No users found.'
+            })
+
+            const totalUsers = await User.count()
+
+            return response.status(200).send({ users, totalUsers })
+        } catch (error) {
+            return response.status(401).send(
+                {
+                    message: "Unable to find users.",
+                    cause: error.message
+                })
+        }
+    }
+
     async updateOneUser(request, response) {
         try {
-            const { id, name, email } = request.body;
+            const { id } = request.params
+            const { name, email } = request.body
+
 
             const user = await User.findByPk(id, { paranoid: false })
             if (!user) {
@@ -62,8 +90,7 @@ class UserController {
                     return response.status(400).json({ error: 'Email already in use.' })
                 }
             }
-
-            await updateUserService({email, name})
+            await updateUserService(id, { email, name })
 
             return response.status(200).send({ message: "User updated." })
         } catch (error) {
@@ -129,17 +156,16 @@ class UserController {
             })
 
             if (!user) {
-                return response.status(404).send({ "msg": "User not found." })
+                return response.status(404).send({ "message": "User not found." })
             }
 
             const match = bcrypt.compareSync(password, user.password)
-            console.log(match)
 
             if (!match) {
-                return response.status(401).send({ "msg": "Invalid password." })
+                return response.status(401).send({ "message": "Invalid password." })
             }
 
-            const token = sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: "1d" })
+            const token = sign({ email: user.email, id: user.id }, process.env.JWT_SECRET, { expiresIn: "1d" })
 
             return response.status(200).send({ token })
         } catch (error) {
@@ -156,15 +182,10 @@ class UserController {
             const {
                 password
             } = request.body
-
-            const {
-                authorization
-            } = request.headers
-
-            const payload = verify(authorization, process.env.JWT_SECRET)
+            const { email } = request.payload
 
             const user = await User.findOne({
-                where: { email: payload.email },
+                where: { email },
                 paranoid: true
             })
 
@@ -183,7 +204,7 @@ class UserController {
                 },
                 {
                     where: {
-                        email: payload.email,
+                        email
                     },
                     individualHooks: true
                 }
@@ -191,7 +212,7 @@ class UserController {
 
             return response.status(200).send({ message: "Password updated." })
         } catch (error) {
-            if(error.message.split("\n").length > 0){
+            if (error.message.split("\n").length > 0) {
                 return response.status(400).send(
                     {
                         message: "Unable to change a user password.",

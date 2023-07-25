@@ -36,3 +36,47 @@ O front-end deve apresentar pelo menos os seguintes requisitos:
 ## Extras:
 - Build para produção
 - Docker file com todas dependências
+
+
+# Nota do Autor:
+- O Projeto consiste em um backend integrado a um banco de dados postgres e um frontend.
+
+## Execução do Backend
+- Dentro da pasta /backend crie um arquivo .env e utilize o docker-compose para iniciar o servidor
+
+### Rotas Básicas
+- Criar um usuário: POST `/api/createOneUser`
+  ```
+  {
+      "email": string REQUIRED,
+      "password": string REQUIRED,
+      "name": string REQUIRED,
+  }
+  ```
+- Receber um Token de autenticação: POST `/api/loginUser`
+  ```
+  {
+      "email": string REQUIRED,
+      "password": string REQUIRED,
+  }
+  ```
+
+- Listar todos os usuários: GET `/api/listUser` || Requer um Token de Autenticação
+- Remover ( Deleção lógica ) um usuário: REMOVE `/api/deleteOneUser/:id` || Requer um Token de Autenticação
+- Reativar um usuário: PATCH `/api/restoreOneUser/:id` || Requer um Token de Autenticação
+- Alterar um usuário: PATCH `/api/updateOneUser/:id` || Requer um Token de Autenticação
+  ```
+  {
+      "name": string,
+      "email": string
+  }
+  ```
+- Alterar a senha de um usuário: POST `/api/updatePassword` || Requer um Token de Autenticação
+  ```
+  {
+      "password": string
+  }
+  ```
+## Execução do Frontend
+- Dentro da pasta /frontend crie um arquivo .env e utilize o docker-compose para iniciar o servidor
+- Para efetuar o login, um usuário deverá ter sido criado pelo backend.

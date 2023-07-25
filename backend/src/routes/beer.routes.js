@@ -4,9 +4,14 @@ const { auth } = require('../middleware/auth')
 
 class BeerRouter {
   routesFromBeer () {
-    const beerRoutes = Router()
-    beerRoutes.get('/consultAPI/:offset/:limit', auth, consultAPI)
-    return beerRoutes
+    try {
+      const beerRoutes = Router()
+      beerRoutes.get('/consultAPI/:offset/:limit', auth, consultAPI)
+
+      return beerRoutes
+    } catch (error) {
+      return "Message: External API is unavailable"
+    }
   }
 }
 
