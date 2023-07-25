@@ -9,8 +9,6 @@ RUN npm install -g sequelize-cli
 
 COPY . .
 
-COPY start.sh .
-
 EXPOSE 3333
 
-CMD ["./start.sh"]
+CMD npx sequelize-cli db:migrate && node ./src/index.js
